@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\OrganizationRole;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class StoreInvitationRequest extends FormRequest
 {
@@ -12,7 +14,7 @@ class StoreInvitationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +25,9 @@ class StoreInvitationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "phone"=>["required","string"],
+            "organization"=>["required","string"],
+            "role" => [new Enum(OrganizationRole::class)],
         ];
     }
 }

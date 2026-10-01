@@ -2,18 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\OrganizationDTO;
 use App\Http\Requests\StoreOrganizationRequest;
 use App\Http\Requests\UpdateOrganizationRequest;
 use App\Models\Organization;
+use App\Services\Interface\OrganizationServiceInterface;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrganizationController extends Controller
 {
+
+    public function __construct(protected OrganizationServiceInterface $organizationService)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $user = $request->user('sanctum');
+
+        return response()->json([
+            "organizations" => $this->organizationService->getUserOrganizations($user),
+        ],200);
     }
 
     /**
@@ -21,7 +34,13 @@ class OrganizationController extends Controller
      */
     public function store(StoreOrganizationRequest $request)
     {
-        //
+        $user = $request->user('sanctum');
+        $organization = $this->organizationService
+            ->createOrganization(OrganizationDTO::fromStoreOrganizationRequest($user, $request));
+
+        return response()->json([
+            "organization" => $organization
+        ]);
     }
 
     /**

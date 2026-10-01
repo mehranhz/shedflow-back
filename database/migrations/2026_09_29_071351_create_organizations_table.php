@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('organizations', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignId('user_id')->constrained();
             $table->string('name');
             $table->string('slug')->unique();
             $table->string('timezone')->default('UTC');

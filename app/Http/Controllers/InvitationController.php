@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\InvitationDTO;
 use App\Http\Requests\StoreInvitationRequest;
 use App\Http\Requests\UpdateInvitationRequest;
 use App\Models\Invitation;
+use App\Models\Organization;
+use App\Services\Interface\InvitationServiceInterface;
 
 class InvitationController extends Controller
 {
+    public function __construct(protected InvitationServiceInterface $invitationService)
+    {
+
+    }
     /**
      * Display a listing of the resource.
      */
@@ -21,7 +28,9 @@ class InvitationController extends Controller
      */
     public function store(StoreInvitationRequest $request)
     {
-        //
+        $user = $request->user("sanctum");
+
+        $invitation = $this->invitationService->store(InvitationDTO::fromStoreInvitationRequest($user,$request));
     }
 
     /**

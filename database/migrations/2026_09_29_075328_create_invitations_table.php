@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('invitations', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained();
+            $table->foreignUuid('organization_id')->constrained();
             $table->string('phone')->index();
-            $table->foreignUuid('organization_id')->constrained()   ;
+            $table->enum('status',['pending', 'accepted','rejected'])->default('pending');
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
             $table->string('role')->nullable();

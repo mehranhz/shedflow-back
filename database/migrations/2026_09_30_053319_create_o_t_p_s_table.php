@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('organizations', function (Blueprint $table) {
+        Schema::create('o_t_p_s', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
-            $table->string('slug')->unique();
-            $table->string('timezone')->default('UTC');
-            $table->string('locale')->default('en');
-            $table->string('currency')->default('USD');
-            $table->string('brand_color')->nullable();
+            $table->string('username');
+            $table->string('code');
+            $table->timestamp("verified_at")->nullable();
+            $table->timestamp("expires_at");
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('organizations');
+        Schema::dropIfExists('o_t_p_s');
     }
 };

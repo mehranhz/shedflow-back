@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreOrganizationRequest extends FormRequest
+class OTPVerifyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,8 @@ class StoreOrganizationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "username"=>"required|string",
+            "code"=>"required|string",
         ];
     }
 }

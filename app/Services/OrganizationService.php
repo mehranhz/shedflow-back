@@ -9,12 +9,11 @@ use App\Services\Interface\OrganizationServiceInterface;
 
 class OrganizationService implements OrganizationServiceInterface
 {
-    public function getUserOrganizations(User $user): array
+    public function getUserOrganizations(User $user): object
     {
 
-         return $user->organizations->map(function(Organization $organization) use ($user) {
-             return OrganizationDTO::fromModel($user, $organization);
-         })->all();
+        return $user->organizations()->paginate(2);
+
     }
 
     public function createOrganization(OrganizationDTO $dto): Organization

@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Invitation;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
@@ -27,7 +28,7 @@ class InvitationPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user, Organization $organization): bool
     {
         return false;
     }

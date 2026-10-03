@@ -2,7 +2,7 @@
 
 namespace App\DTOs;
 
-use App\Http\Requests\StoreOrganizationRequest;
+use App\Http\Requests\v1\StoreOrganizationRequest;
 use App\Models\Organization;
 use App\Models\User;
 

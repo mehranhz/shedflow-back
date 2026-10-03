@@ -1,18 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1;
 
-use App\Http\Requests\LoginWithOTPRequest;
-use App\Http\Requests\LoginWithPhoneAndPasswordRequest;
-use App\Http\Requests\OTPVerifyRequest;
-use App\Http\Requests\RegisterRequest;
-use App\Models\User;
+use App\Http\Requests\v1\LoginWithOTPRequest;
+use App\Http\Requests\v1\LoginWithPhoneAndPasswordRequest;
+use App\Http\Requests\v1\OTPVerifyRequest;
+use App\Http\Requests\v1\RegisterRequest;
 use App\Services\Interface\AuthenticationServiceInterface;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
+use App\Traits\ApiResponse;
 
 class AuthController extends Controller
 {
+    use ApiResponse;
     public function __construct(protected AuthenticationServiceInterface $authenticationService)
     {
 
@@ -22,10 +21,12 @@ class AuthController extends Controller
     {
         try{
             $token = $this->authenticationService->loginWithPassword($request->input('username'),$request->input('password'));
-            return response()->json([
-                "success"=> true,
-                "token"=> $token,
-            ],200);
+            return $this->success(
+                data: [
+                    "accessToken"=> $token
+                ]
+            );
+
         }catch (\Exception $exception){
             return response()->json([
                 "success"=>false,

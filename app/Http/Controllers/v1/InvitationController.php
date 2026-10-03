@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1;
 
 use App\DTOs\InvitationDTO;
-use App\Http\Requests\StoreInvitationRequest;
-use App\Http\Requests\UpdateInvitationRequest;
+use App\Http\Requests\v1\StoreInvitationRequest;
+use App\Http\Requests\v1\UpdateInvitationRequest;
 use App\Models\Invitation;
-use App\Models\Organization;
 use App\Services\Interface\InvitationServiceInterface;
 
 class InvitationController extends Controller
@@ -29,7 +28,6 @@ class InvitationController extends Controller
     public function store(StoreInvitationRequest $request)
     {
         $user = $request->user("sanctum");
-
         $invitation = $this->invitationService->store(InvitationDTO::fromStoreInvitationRequest($user,$request));
     }
 

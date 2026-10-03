@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1;
 
-use App\Http\Requests\StoreAvailabilityOverrideRequest;
-use App\Http\Requests\UpdateAvailabilityOverrideRequest;
+use App\Http\Requests\v1\StoreAvailabilityOverrideRequest;
+use App\Http\Requests\v1\UpdateAvailabilityOverrideRequest;
 use App\Models\AvailabilityOverride;
 
 class AvailabilityOverrideController extends Controller

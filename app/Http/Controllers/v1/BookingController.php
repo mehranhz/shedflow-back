@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1;
 
-use App\Http\Requests\StoreEventTypeRequest;
-use App\Http\Requests\UpdateEventTypeRequest;
-use App\Models\EventType;
+use App\Http\Requests\v1\StoreBookingRequest;
+use App\Http\Requests\v1\UpdateBookingRequest;
+use App\Models\Booking;
 
-class EventTypeController extends Controller
+class BookingController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +19,7 @@ class EventTypeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreEventTypeRequest $request)
+    public function store(StoreBookingRequest $request)
     {
         //
     }
@@ -27,7 +27,7 @@ class EventTypeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(EventType $eventType)
+    public function show(Booking $booking)
     {
         //
     }
@@ -35,7 +35,7 @@ class EventTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateEventTypeRequest $request, EventType $eventType)
+    public function update(UpdateBookingRequest $request, Booking $booking)
     {
         //
     }
@@ -43,7 +43,7 @@ class EventTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(EventType $eventType)
+    public function destroy(Booking $booking)
     {
         //
     }

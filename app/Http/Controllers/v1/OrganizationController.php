@@ -1,18 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1;
 
 use App\DTOs\OrganizationDTO;
-use App\Http\Requests\StoreOrganizationRequest;
-use App\Http\Requests\UpdateOrganizationRequest;
+use App\Http\Requests\v1\StoreOrganizationRequest;
+use App\Http\Requests\v1\UpdateOrganizationRequest;
+use App\Http\Resources\v1\OrganizationResource;
 use App\Models\Organization;
 use App\Services\Interface\OrganizationServiceInterface;
+use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class OrganizationController extends Controller
 {
-
+    use ApiResponse;
     public function __construct(protected OrganizationServiceInterface $organizationService)
     {
     }
@@ -23,10 +24,7 @@ class OrganizationController extends Controller
     public function index(Request $request)
     {
         $user = $request->user('sanctum');
-
-        return response()->json([
-            "organizations" => $this->organizationService->getUserOrganizations($user),
-        ],200);
+        return OrganizationResource::collection($this->organizationService->getUserOrganizations($user));
     }
 
     /**

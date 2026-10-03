@@ -3,7 +3,7 @@
 namespace App\DTOs;
 
 use App\Enums\OrganizationRole;
-use App\Http\Requests\StoreInvitationRequest;
+use App\Http\Requests\v1\StoreInvitationRequest;
 use App\Models\Organization;
 use App\Models\User;
 
@@ -21,7 +21,7 @@ class InvitationDTO
 
     public static function fromStoreInvitationRequest(User $user,StoreInvitationRequest $storeInvitationRequest): self
     {
-        $organization = Organization::findOrFail($storeInvitationRequest->organization);
+        $organization = $user->organizations()->findOrFail($storeInvitationRequest->organization);
         return new self($user, $organization, $storeInvitationRequest->phone, $storeInvitationRequest->role ??OrganizationRole::Member->value);
     }
 }

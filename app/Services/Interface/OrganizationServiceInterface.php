@@ -7,14 +7,14 @@ namespace App\Services\Interface;
 use App\DTOs\OrganizationDTO;
 use App\Models\Organization;
 use App\Models\User;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 interface OrganizationServiceInterface
 {
     /**
-     * @param User $user
-     * @return OrganizationDTO[]
+    * @return LengthAwarePaginator<int, Organization>
      */
-    public function getUserOrganizations(User $user ): array;
+    public function getUserOrganizations(User $user ): object;
 
     public function createOrganization(OrganizationDTO $dto): Organization;
 }

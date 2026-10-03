@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1;
 
-use App\Http\Requests\StoreAvailabilityRuleRequest;
-use App\Http\Requests\UpdateAvailabilityRuleRequest;
+use App\Http\Requests\v1\StoreAvailabilityRuleRequest;
+use App\Http\Requests\v1\UpdateAvailabilityRuleRequest;
 use App\Models\AvailabilityRule;
 
 class AvailabilityRuleController extends Controller

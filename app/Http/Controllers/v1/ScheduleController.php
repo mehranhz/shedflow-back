@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v1;
 
-use App\Http\Requests\StoreScheduleRequest;
-use App\Http\Requests\UpdateScheduleRequest;
+use App\Http\Requests\v1\StoreScheduleRequest;
+use App\Http\Requests\v1\UpdateScheduleRequest;
 use App\Models\Schedule;
 
 class ScheduleController extends Controller

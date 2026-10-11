@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Entities;
+namespace App\DTOs;
 
 use Illuminate\Notifications\Notifiable;
 
-class Contact
+class ContactDTO
 {
     use Notifiable;
 

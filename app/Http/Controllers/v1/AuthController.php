@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Http\Controllers\APIController;
 use App\Http\Requests\v1\LoginWithOTPRequest;
 use App\Http\Requests\v1\LoginWithPhoneAndPasswordRequest;
 use App\Http\Requests\v1\OTPVerifyRequest;
 use App\Http\Requests\v1\RegisterRequest;
 use App\Services\Interface\AuthenticationServiceInterface;
-use App\Traits\ApiResponse;
 
-class AuthController extends Controller
+
+class AuthController extends APIController
 {
-    use ApiResponse;
     public function __construct(protected AuthenticationServiceInterface $authenticationService)
     {
 
@@ -19,11 +19,18 @@ class AuthController extends Controller
 
     public function loginWithPassword(LoginWithPhoneAndPasswordRequest $request)
     {
+        logger("login with phone and password");
         try{
             $token = $this->authenticationService->loginWithPassword($request->input('username'),$request->input('password'));
+            logger($token);
             return $this->success(
                 data: [
-                    "accessToken"=> $token
+                    "user" => [
+                        "id" => "1",
+                        "email" => "mail@mail.com"
+                    ],
+                    "accessToken"=> $token,
+                    "refreshToken" => $token
                 ]
             );
 

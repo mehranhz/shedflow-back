@@ -3,17 +3,16 @@
 namespace App\Http\Controllers\v1;
 
 use App\DTOs\OrganizationDTO;
+use App\Http\Controllers\APIController;
 use App\Http\Requests\v1\StoreOrganizationRequest;
 use App\Http\Requests\v1\UpdateOrganizationRequest;
 use App\Http\Resources\v1\OrganizationResource;
 use App\Models\Organization;
 use App\Services\Interface\OrganizationServiceInterface;
-use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 
-class OrganizationController extends Controller
+class OrganizationController extends APIController
 {
-    use ApiResponse;
     public function __construct(protected OrganizationServiceInterface $organizationService)
     {
     }

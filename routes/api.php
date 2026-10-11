@@ -3,6 +3,7 @@
 use App\Http\Controllers\v1\AuthController;
 use App\Http\Controllers\v1\InvitationController;
 use App\Http\Controllers\v1\OrganizationController;
+use App\Http\Controllers\v1\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,11 +14,14 @@ Route::prefix("/v1")->group(function () {
         return $request->user();
     })->middleware('auth:sanctum');
 
+    Route::get("/auth/me", [ProfileController::class, "getProfile"]);
 
+Route::prefix('/auth')->group(function () {
     Route::post('/login', [AuthController::class, 'loginWithPassword']);
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/request-otp', [AuthController::class, 'loginWithOTP']);
     Route::post('/verify-otp', [AuthController::class, 'verifyOTPForUsername']);
+});
 
 
     Route::prefix('/organization')->group(function (){

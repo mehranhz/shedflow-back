@@ -2,19 +2,25 @@
 
 namespace App\Services\Interface;
 
-
-
-use App\DTOs\OrganizationDTO;
-use App\Models\Organization;
 use App\Models\User;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 interface OrganizationServiceInterface
 {
-    /**
-    * @return LengthAwarePaginator<int, Organization>
-     */
-    public function getUserOrganizations(User $user ): object;
+    public function listForUser(User $user): Collection;
 
-    public function createOrganization(OrganizationDTO $dto): Organization;
+    public function getForUser(User $user, string $organizationId): array;
+
+    public function createOrganization(User $user, array $input): array;
+
+    public function updateOrganization(User $user, string $organizationId, array $input): array;
+
+    public function deleteOrganization(User $user, string $organizationId): void;
+
+    /**
+     * @return array{accessToken:string,organizationId:string,role:string}
+     */
+    public function switchOrganization(User $user, string $organizationId): array;
+
+    public function listMembers(User $user, string $organizationId): array;
 }

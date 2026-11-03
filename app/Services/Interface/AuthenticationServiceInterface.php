@@ -2,10 +2,31 @@
 
 namespace App\Services\Interface;
 
+use App\Models\User;
+
 interface AuthenticationServiceInterface
 {
-    public function register(string $username,string $name ,string $password): bool;
-    public function loginWithPassword(string $username,string $password): string;
-    public function requestOTPForUsername(string $username):bool;
-    public function verifyOTP(string $username,string $code): string;
+    /**
+     * @return array{accessToken:string,refreshToken:string,user:array<string,mixed>}
+     */
+    public function register(array $input, array $meta = []): array;
+
+    /**
+     * @return array{accessToken:string,refreshToken:string,user:array<string,mixed>}
+     */
+    public function loginWithPassword(string $username, string $password, array $meta = []): array;
+
+    /**
+     * @return array{accessToken:string,refreshToken:string}
+     */
+    public function refresh(string $refreshToken, ?string $organizationId = null, array $meta = []): array;
+
+    public function logout(User $user, ?string $refreshToken = null): void;
+
+    public function requestOTPForUsername(string $username): bool;
+
+    /**
+     * @return array{accessToken:string,refreshToken:string,user:array<string,mixed>}
+     */
+    public function verifyOTP(string $username, string $code, array $meta = []): array;
 }

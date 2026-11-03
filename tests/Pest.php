@@ -15,7 +15,7 @@ use Tests\TestCase;
 */
 
 pest()->extend(TestCase::class)
- // ->use(RefreshDatabase::class)
+    ->use(RefreshDatabase::class)
     ->in('Feature');
 
 /*
@@ -44,7 +44,64 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function seedOrgWithDefaultSchedule(): array
 {
-    // ..
+    $user = \App\Models\User::factory()->create();
+    $organization = \App\Models\Organization::factory()->create(['timezone' => 'UTC']);
+    $user->organizations()->attach($organization->id, [
+        'type' => \App\Enums\OrganizationRole::Owner->value,
+        'status' => \App\Enums\MembershipStatus::Active->value,
+    ]);
+
+    $schedule = \App\Models\Schedule::factory()->create([
+        'organization_id' => $organization->id,
+        'user_id' => $user->id,
+        'created_by' => $user->id,
+        'timezone' => 'UTC',
+        'is_default' => true,
+    ]);
+
+    foreach ([1, 2, 3, 4, 5] as $day) {
+        \App\Models\AvailabilityRule::factory()->create([
+            'schedule_id' => $schedule->id,
+            'day_of_week' => $day,
+            'start_minute' => 540,
+            'end_minute' => 1020,
+        ]);
+    }
+
+    return compact('user', 'organization', 'schedule');
+}
+
+function bearerFor(\App\Models\User $user, \App\Models\Organization $organization): string
+{
+    return 'Bearer '.app(\App\Services\JwtTokenService::class)->signAccessToken(
+        $user,
+        $organization->id,
+        \App\Enums\OrganizationRole::Owner,
+    );
+}
+
+function customerAccessToken(\App\Models\User $user, ?string $organizationId = null): string
+{
+    $jwt = app(\App\Services\JwtTokenService::class);
+    if ($organizationId === null) {
+        [$organizationId, $customerId] = $jwt->pickActiveCustomerOrg($user);
+    } else {
+        $customer = \App\Models\Customer::query()
+            ->where('user_id', $user->id)
+            ->where('organization_id', $organizationId)
+            ->firstOrFail();
+        $customerId = $customer->id;
+    }
+
+    return $jwt->signAccessToken(
+        $user,
+        null,
+        null,
+        null,
+        \App\Enums\ActorType::Customer,
+        $organizationId,
+        $customerId ?? null,
+    );
 }

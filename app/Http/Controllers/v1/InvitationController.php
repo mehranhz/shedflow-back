@@ -2,56 +2,41 @@
 
 namespace App\Http\Controllers\v1;
 
-use App\DTOs\InvitationDTO;
-use App\Http\Requests\v1\StoreInvitationRequest;
-use App\Http\Requests\v1\UpdateInvitationRequest;
-use App\Models\Invitation;
+use App\Http\Controllers\Controller;
 use App\Services\Interface\InvitationServiceInterface;
+use Illuminate\Http\Request;
 
 class InvitationController extends Controller
 {
-    public function __construct(protected InvitationServiceInterface $invitationService)
-    {
+    public function __construct(protected InvitationServiceInterface $invitationService) {}
 
-    }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request, string $organization)
     {
-        //
+        return response()->json($this->invitationService->list($request->user(), $organization));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreInvitationRequest $request)
+    public function store(Request $request, string $organization)
     {
-        $user = $request->user("sanctum");
-        $invitation = $this->invitationService->store(InvitationDTO::fromStoreInvitationRequest($user,$request));
+        $data = $request->validate([
+            'phone' => ['required', 'string', 'max:32'],
+            'role' => ['required', 'in:ADMIN,MEMBER'],
+        ]);
+
+        return response()->json(
+            $this->invitationService->create($request->user(), $organization, $data['phone'], $data['role']),
+            201,
+        );
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Invitation $invitation)
+    public function destroy(Request $request, string $organization, string $invitation)
     {
-        //
+        $this->invitationService->revoke($request->user(), $organization, $invitation);
+
+        return response()->noContent();
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateInvitationRequest $request, Invitation $invitation)
+    public function accept(Request $request, string $token)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Invitation $invitation)
-    {
-        //
+        return response()->json($this->invitationService->accept($request->user(), $token));
     }
 }

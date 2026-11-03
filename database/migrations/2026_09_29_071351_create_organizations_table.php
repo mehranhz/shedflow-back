@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('organizations', function (Blueprint $table) {
@@ -17,15 +14,16 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('timezone')->default('UTC');
             $table->string('locale')->default('en');
-            $table->string('currency')->default('USD');
+            $table->string('currency', 3)->default('USD');
             $table->string('brand_color')->nullable();
+            $table->string('logo_url')->nullable();
+            $table->string('platform_plan')->default('FREE');
+            $table->json('settings')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('organizations');

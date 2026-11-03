@@ -13,39 +13,31 @@ return new class extends Migration
     {
         Schema::create('event_types', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
+            $table->foreignUuid('organization_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid('host_user_id')->constrained('users');
+            $table->foreignUuid('schedule_id')->constrained();
             $table->string('slug');
-            $table->foreignUuid('creator_id')->references('id')->on('users');
-            $table->foreignUuid('organizer_id')->references('id')->on('organizer');
-            $table->foreignUuid('schedule_id')->references('id')->on('schedule');
-            $table->foreignUuid('organization_id')->references('id')->on('organization');
-            $table->text('notes')->nullable();
-            $table->text('description')->nullable();
-            $table->boolean('is_public')->default(false);
-            $table->boolean('is_active')->default(false);
-            $table->boolean('is_default')->default(false);
-            $table->integer('duration_minutes')->nullable();
-            $table->integer('buffer_before_minutes')->nullable();
-            $table->integer('buffer_after_minutes')->nullable();
-            $table->integer('min_notice_minutes')->nullable();
-            $table->integer('max_days_ahead')->nullable();
-            $table->integer('slot_interval_minutes')->nullable();
-            $table->integer('daily_capacity')->nullable();
-            $table->integer('weekly_capacity')->nullable();
-            $table->integer('monthly_capacity')->nullable();
-            $table->integer('yearly_capacity')->nullable();
-            $table->boolean('require_confirmation')->nullable();
-            $table->boolean('creator_can_cancel')->nullable();
-            $table->boolean('organizer_can_cancel')->nullable();
-            $table->boolean('hosts_can_cancel')->nullable();
-            $table->boolean('guest_can_cancel')->nullable();
-            $table->integer('min_minutes_before_cancel')->nullable();
-            $table->integer('max_minutes_before_cancel')->nullable();
-            $table->integer('cancellation_notice_minutes')->nullable();
-            $table->integer('reschedule_notice_minutes')->nullable();
-            $table->string('location_type')->nullable();
-            $table->string('location')->nullable();
+            $table->string('title');
+            $table->text('description')->default('');
+            $table->unsignedInteger('duration_minutes');
+            $table->string('location_type');
+            $table->string('location_value')->nullable();
+            $table->unsignedInteger('buffer_before_minutes')->default(0);
+            $table->unsignedInteger('buffer_after_minutes')->default(0);
+            $table->unsignedInteger('min_notice_minutes')->default(60);
+            $table->unsignedInteger('max_days_ahead')->default(60);
+            $table->unsignedInteger('slot_interval_minutes')->default(0);
+            $table->unsignedInteger('daily_cap')->nullable();
+            $table->boolean('requires_confirmation')->default(false);
+            $table->unsignedInteger('cancellation_notice_hours')->default(24);
+            $table->unsignedInteger('reschedule_notice_hours')->default(24);
+            $table->json('questions')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->boolean('is_hidden')->default(false);
             $table->timestamps();
+
+            $table->unique(['organization_id', 'slug']);
+            $table->index(['organization_id', 'host_user_id']);
         });
     }
 

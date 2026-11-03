@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\AvailabilityOverride;
+use App\Models\Schedule;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -10,15 +11,16 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class AvailabilityOverrideFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = AvailabilityOverride::class;
+
     public function definition(): array
     {
         return [
-            //
+            'schedule_id' => Schedule::factory(),
+            'date' => now()->toDateString(),
+            'is_unavailable' => false,
+            'start_minute' => 600,
+            'end_minute' => 720,
         ];
     }
 }

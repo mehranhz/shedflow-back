@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Organization;
 use App\Models\Schedule;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -10,15 +12,18 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ScheduleFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = Schedule::class;
+
     public function definition(): array
     {
         return [
-            //
+            'organization_id' => Organization::factory(),
+            'user_id' => User::factory(),
+            'created_by' => fn (array $attrs) => $attrs['user_id'],
+            'name' => 'Working hours',
+            'timezone' => 'UTC',
+            'is_default' => true,
+            'is_public' => false,
         ];
     }
 }

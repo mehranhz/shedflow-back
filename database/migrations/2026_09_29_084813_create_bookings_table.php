@@ -13,19 +13,32 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('parent')->references('id')->on('booking')->nullable();
-            $table->foreignUuid('user_id');
-            $table->foreignUuid('event_type_id');
-            $table->timestamp('start_time')->nullable();
-            $table->timestamp('end_time')->nullable();
-            $table->integer('buffer_before_minutes')->nullable();
-            $table->integer('buffer_after_minutes')->nullable();
-            $table->string('timezone')->default('UTC')->nullable();
-            $table->string('booking_status')->nullable();
-            $table->string('booking_source')->nullable();
-            $table->timestamp('expires_at');
-            $table->json('meta_data')->nullable();
+            $table->string('uid')->unique();
+            $table->foreignUuid('organization_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid('event_type_id')->constrained();
+            $table->foreignUuid('host_user_id')->constrained('users');
+            $table->foreignUuid('customer_id')->constrained();
+            $table->timestamp('start_at');
+            $table->timestamp('end_at');
+            $table->unsignedInteger('buffer_before_minutes')->default(0);
+            $table->unsignedInteger('buffer_after_minutes')->default(0);
+            $table->string('timezone');
+            $table->string('status');
+            $table->string('source');
+            $table->string('location_type');
+            $table->string('location_value')->nullable();
+            $table->json('answers')->nullable();
+            $table->string('cancellation_reason')->nullable();
+            $table->foreignUuid('rescheduled_from_id')->nullable()->constrained('bookings')->nullOnDelete();
+            $table->timestamp('hold_expires_at')->nullable();
+            $table->json('metadata')->nullable();
             $table->timestamps();
+
+            $table->index(['organization_id', 'start_at']);
+            $table->index(['host_user_id', 'start_at']);
+            $table->index(['event_type_id', 'start_at']);
+            $table->index('customer_id');
+            $table->index(['status', 'hold_expires_at']);
         });
     }
 

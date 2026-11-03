@@ -1,9 +1,19 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\AuthServiceProvider;
+use App\Providers\InvitationServiceProvider;
+use App\Providers\OrganizationServiceProvider;
+use App\Providers\ProfileServiceProvider;
+use App\Providers\ScheduleServiceProvider;
+use App\Providers\SchedulingServiceProvider;
+
 return [
-    App\Providers\AppServiceProvider::class,
-    App\Providers\AuthServiceProvider::class,
-    App\Providers\InvitationServiceProvider::class,
-    App\Providers\OrganizationServiceProvider::class,
-    App\Providers\ProfileServiceProvider::class,
+    AppServiceProvider::class,
+    AuthServiceProvider::class,
+    InvitationServiceProvider::class,
+    OrganizationServiceProvider::class,
+    ProfileServiceProvider::class,
+    ScheduleServiceProvider::class,
+    SchedulingServiceProvider::class,
 ];

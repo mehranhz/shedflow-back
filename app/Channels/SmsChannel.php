@@ -2,17 +2,21 @@
 
 namespace App\Channels;
 
-
-
-use App\Notifications\JoinToOrganizationInvitation;
 use Illuminate\Notifications\Notification;
 
 class SmsChannel
 {
-    public function send(object $notifiable, JoinToOrganizationInvitation $notification): void
+    public function send(object $notifiable, Notification $notification): void
     {
-        $message = $notification->toSms($notifiable);
+        if (! method_exists($notification, 'toSms')) {
+            return;
+        }
 
-        logger("send: ".$message."\n to ".$notifiable->phone);
+        $message = $notification->toSms($notifiable);
+        $phone = method_exists($notifiable, 'routeNotificationForSms')
+            ? $notifiable->routeNotificationForSms($notification)
+            : ($notifiable->phone ?? 'unknown');
+
+        logger('send: '.$message."\n to ".$phone);
     }
 }

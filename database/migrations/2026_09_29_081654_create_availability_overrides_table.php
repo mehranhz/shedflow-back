@@ -13,15 +13,14 @@ return new class extends Migration
     {
         Schema::create('availability_overrides', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('schedule_id');
-            $table->timestamp('date')->nullable();
+            $table->foreignUuid('schedule_id')->constrained()->cascadeOnDelete();
+            $table->date('date');
             $table->boolean('is_unavailable')->default(false);
-            $table->integer('day');
-            $table->integer('startMinute');
-            $table->integer('endMinute');
-            $table->text('notes')->nullable();
-            $table->string('public_label')->nullable();
+            $table->unsignedSmallInteger('start_minute')->nullable();
+            $table->unsignedSmallInteger('end_minute')->nullable();
             $table->timestamps();
+
+            $table->unique(['schedule_id', 'date']);
         });
     }
 

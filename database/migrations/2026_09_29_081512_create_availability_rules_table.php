@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('availability_rules', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('schedule_id');
-            $table->integer('day');
-            $table->integer('startMinute');
-            $table->integer('endMinute');
+            $table->foreignUuid('schedule_id')->constrained()->cascadeOnDelete();
+            $table->unsignedTinyInteger('day_of_week');
+            $table->unsignedSmallInteger('start_minute');
+            $table->unsignedSmallInteger('end_minute');
             $table->timestamps();
+
+            $table->index(['schedule_id', 'day_of_week']);
         });
     }
 

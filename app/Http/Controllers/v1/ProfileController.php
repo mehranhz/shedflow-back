@@ -3,20 +3,21 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\APIController;
-use App\Services\ProfileService;
+use App\Services\Interface\ProfileServiceInterface;
 use Illuminate\Http\Request;
 
 class ProfileController extends APIController
 {
-    public function __construct(protected ProfileService $profileService)
-    {
-    }
+    public function __construct(protected ProfileServiceInterface $profileService) {}
 
     public function getProfile(Request $request)
     {
+        $profile = $this->profileService->getProfile(
+            $request->user(),
+            $request->attributes->get('jwt_org_id'),
+            $request->attributes->get('jwt_impersonating_org_id'),
+        );
 
-        $user = $request->user("sanctum");
-
-        return $this->success(data: $this->profileService->getProfile($user)->toArray());
+        return $this->success(data: $profile);
     }
 }

@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'frontend' => [
+        'url' => env('FRONTEND_APP_URL', 'http://localhost:3000'),
+    ],
+
 ];

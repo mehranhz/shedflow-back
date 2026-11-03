@@ -2,65 +2,75 @@
 
 namespace App\Http\Controllers\v1;
 
-use App\DTOs\OrganizationDTO;
 use App\Http\Controllers\APIController;
-use App\Http\Requests\v1\StoreOrganizationRequest;
-use App\Http\Requests\v1\UpdateOrganizationRequest;
-use App\Http\Resources\v1\OrganizationResource;
-use App\Models\Organization;
 use App\Services\Interface\OrganizationServiceInterface;
 use Illuminate\Http\Request;
 
 class OrganizationController extends APIController
 {
-    public function __construct(protected OrganizationServiceInterface $organizationService)
-    {
-    }
+    public function __construct(protected OrganizationServiceInterface $organizationService) {}
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-        $user = $request->user('sanctum');
-        return OrganizationResource::collection($this->organizationService->getUserOrganizations($user));
+        return response()->json($this->organizationService->listForUser($request->user())->values());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreOrganizationRequest $request)
+    public function store(Request $request)
     {
-        $user = $request->user('sanctum');
-        $organization = $this->organizationService
-            ->createOrganization(OrganizationDTO::fromStoreOrganizationRequest($user, $request));
-
-        return response()->json([
-            "organization" => $organization
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:100'],
+            'timezone' => ['nullable', 'string', 'max:64'],
+            'locale' => ['nullable', 'string', 'max:16'],
+            'currency' => ['nullable', 'string', 'size:3'],
+            'brandColor' => ['nullable', 'string', 'max:32'],
         ]);
+
+        return response()->json(
+            $this->organizationService->createOrganization($request->user(), $data),
+            201,
+        );
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Organization $organization)
+    public function show(Request $request, string $organization)
     {
-        //
+        return response()->json($this->organizationService->getForUser($request->user(), $organization));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateOrganizationRequest $request, Organization $organization)
+    public function update(Request $request, string $organization)
     {
-        //
+        $data = $request->validate([
+            'name' => ['sometimes', 'string', 'max:100'],
+            'timezone' => ['sometimes', 'string', 'max:64'],
+            'locale' => ['sometimes', 'string', 'max:16'],
+            'currency' => ['sometimes', 'string', 'size:3'],
+            'brandColor' => ['nullable', 'string', 'max:32'],
+            'logoUrl' => ['nullable', 'string', 'max:255'],
+            'settings' => ['sometimes', 'array'],
+        ]);
+
+        return response()->json(
+            $this->organizationService->updateOrganization($request->user(), $organization, $data),
+        );
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Organization $organization)
+    public function destroy(Request $request, string $organization)
     {
-        //
+        $this->organizationService->deleteOrganization($request->user(), $organization);
+
+        return response()->noContent();
+    }
+
+    public function switchOrg(Request $request, string $organization)
+    {
+        return response()->json(
+            $this->organizationService->switchOrganization($request->user(), $organization),
+        );
+    }
+
+    public function members(Request $request, string $organization)
+    {
+        return response()->json(
+            $this->organizationService->listMembers($request->user(), $organization),
+        );
     }
 }

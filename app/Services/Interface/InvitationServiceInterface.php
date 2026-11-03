@@ -2,10 +2,15 @@
 
 namespace App\Services\Interface;
 
-use App\DTOs\InvitationDTO;
-use App\Models\Invitation;
+use App\Models\User;
 
 interface InvitationServiceInterface
 {
-    public function store(InvitationDTO $invitationDTO): Invitation;
+    public function list(User $user, string $organizationId): array;
+
+    public function create(User $user, string $organizationId, string $phone, string $role): array;
+
+    public function revoke(User $user, string $organizationId, string $invitationId): void;
+
+    public function accept(User $user, string $rawToken): array;
 }
